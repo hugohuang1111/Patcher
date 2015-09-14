@@ -1,14 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import os
 import sys
-from mod_source import ModSource
+sys.path.append("..")
+from patcher.mod_source import ModSource
 
 def main():
-	sys.path.append("..")
-
+	cur_dir = os.path.dirname(os.path.realpath(__file__))
 	# cpp code
-	cfg = {'dir': '.',
+	cfg = {'dir': cur_dir,
 	'file': 'AppDelegate.cpp',
 	'class': 'AppDelegate',
 	'function': 'applicationDidFinishLaunching',
@@ -20,10 +21,10 @@ def main():
 	m.apply_modify()
 
 	# java code
-	cfg = {'dir': '.',
+	cfg = {'dir': cur_dir,
 	'file': 'Cocos2dxActivity.java',
 	'class': 'Cocos2dxActivity',
-	'function': 'onCreate',
+	'function': 'onCreate(',
 	'position': 'after',
 	'target': 'onLoadNativeLibraries();',
 	'content': 'sdkbox.init();',
@@ -32,7 +33,7 @@ def main():
 	m = ModSource(cfg)
 	m.apply_modify()
 
-	cfg = {'dir': '.',
+	cfg = {'dir': cur_dir,
 	'file': 'Cocos2dxActivity.java',
 	'class': 'Cocos2dxActivity',
 	'function': 'onStart',

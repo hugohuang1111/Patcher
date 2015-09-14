@@ -10,7 +10,10 @@ class CodeAnalytics(object):
 		super(CodeAnalytics, self).__init__()
 		self.arg = arg
 		self.cur_dir = os.path.dirname(os.path.realpath(__file__))
+		print 'current dir:' + self.cur_dir
 		self.search_dir = os.path.realpath(os.path.join(self.cur_dir, arg['dir']))
+		self.search_dir = arg['dir']
+		print 'search dir:' + self.search_dir
 		self.scope = {}
 		self.search_and_read_lines()
 
@@ -103,7 +106,7 @@ class CodeAnalytics(object):
 			scope = self.scope
 		column = self.get_scope_line_end_column(scope) - 1
 		if column < 0:
-			self.scope_line_end_decrease(1)
+			self.scope_line_end_decrease(1, scope)
 			self.set_scope_line_end_column(-1, scope)
 		else:
 			self.set_scope_line_end_column(column, scope)
@@ -223,7 +226,6 @@ class CodeAnalytics(object):
 
 		if not target_lines or 0 == len(target_lines):
 			# target is none use whole function body as target
-			print self.scope_function
 			target_scope = self.scope_function.copy()
 			self.scope_start_column_increase(1, target_scope)
 			self.scope_end_column_decrease(1, target_scope)
@@ -440,7 +442,7 @@ class ModSource(object):
 		self.arg = arg
 
 	def apply_modify(self):
-		fileType = os.path.splitext(cfg['file'])[-1]
+		fileType = os.path.splitext(self.arg['file'])[-1]
 		mod = None
 		if '.cpp' == fileType:
 			mod = CppAnalytics(self.arg)
