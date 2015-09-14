@@ -1,0 +1,76 @@
+*.bak
+
+### Android ###
+gdb.setup
+gdbserver
+
+### Visual Studio ###
+*.suo
+*.sdf
+
+### Package File ###
+*.tar.gz
+
+### Python ###
+*.pyc
+
+### Documentation ###
+_output/ 
+*.pdf
+
+### Android ###
+bin/
+obj/
+gen/
+assets/
+armeabi/
+local.properties
+
+### AppCode ###
+.idea/
+
+### Xcode ###
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.xcuserstate
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+.DS_Store
+*~
+*.swp
+testbuild.*
