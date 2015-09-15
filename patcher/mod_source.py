@@ -3,6 +3,7 @@
 
 import os
 import re
+import platform
 
 class CodeAnalytics(object):
 	"""analytics source code"""
@@ -16,6 +17,19 @@ class CodeAnalytics(object):
 		print 'search dir:' + self.search_dir
 		self.scope = {}
 		self.search_and_read_lines()
+
+	def get_platform_name(self):
+		p = platform.system()
+		return p
+
+	def get_line_end(self):
+		platform = self.get_platform_name()
+		if 'Darwin' == platform:
+			return '\r'
+		elif 'Windows' == platform:
+			return '\r\n'
+		else: # start with 'Linux'
+			return '\n'
 
 	def set_scope_line_start(self, linenumber, scope = None):
 		if None == scope:
@@ -205,10 +219,12 @@ class CodeAnalytics(object):
 				break
 		if 0 == len(self.lines):
 			raise RuntimeError('file (%s) is empty' % self.file_path)
+		if len(self.lines) < 50:
+			print 'file lines number:%d' % len(self.lines)
 
 	def save_lines_to_file(self, lines):
 		f = open(self.file_path, 'w')
-		f.write('\r'.join(lines))
+		f.write(''.join(lines))
 		f.close()
 
 	def get_target_lines(self):
@@ -327,11 +343,11 @@ class CodeAnalytics(object):
 
 			new_lines.insert(line_idx, '')
 			line_idx += 1
-			new_lines.insert(line_idx, '    //*** SDKbox auto modify Begin ***//')
+			new_lines.insert(line_idx, self.get_line_end() + '    /*** SDKbox auto modify Begin ***/' + self.get_line_end())
 			line_idx += 1
 			new_lines.insert(line_idx, '    ' + content)
 			line_idx += 1
-			new_lines.insert(line_idx, '    //*** SDKbox auto modify End ***//')
+			new_lines.insert(line_idx, self.get_line_end() + '    /*** SDKbox auto modify End ***/' + self.get_line_end())
 			line_idx += 1
 			new_lines.insert(line_idx, '')
 			line_idx += 1
@@ -347,11 +363,11 @@ class CodeAnalytics(object):
 
 			new_lines.insert(line_idx, '')
 			line_idx += 1
-			new_lines.insert(line_idx, '    //*** SDKbox auto modify Begin ***//')
+			new_lines.insert(line_idx, self.get_line_end() + '    /*** SDKbox auto modify Begin ***/' + self.get_line_end())
 			line_idx += 1
 			new_lines.insert(line_idx, '    ' + content)
 			line_idx += 1
-			new_lines.insert(line_idx, '    //*** SDKbox auto modify End ***//')
+			new_lines.insert(line_idx, self.get_line_end() + '    /*** SDKbox auto modify End ***/' + self.get_line_end())
 			line_idx += 1
 			new_lines.insert(line_idx, '')
 			line_idx += 1
@@ -365,12 +381,11 @@ class CodeAnalytics(object):
 				if i == line_start:
 					new_lines.append(line[:self.get_scope_line_start()])
 
-					new_lines.append('')
-					new_lines.append('//*** SDKbox auto modify Begin ***//')
+					new_lines.append(self.get_line_end() + '/*** SDKbox auto modify Begin ***/' + self.get_line_end())
 					new_lines.append(content)
 				if i == line_end:
-					new_lines.append('//*** SDKbox auto modify End ***//')
-					new_lines.append('')
+					new_lines.append(self.get_line_end() + '/*** SDKbox auto modify End ***/' + self.get_line_end())
+					new_lines.append(self.get_line_end())
 
 					new_lines.append(line[scrope['end_idx']:])
 				if i < line_start or i > line_end:
