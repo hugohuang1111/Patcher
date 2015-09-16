@@ -25,7 +25,7 @@ class CodeAnalytics(object):
 	def get_line_end(self):
 		platform = self.get_platform_name()
 		if 'Darwin' == platform:
-			return '\r'
+			return '\n'
 		elif 'Windows' == platform:
 			return '\r\n'
 		else: # start with 'Linux'
@@ -434,7 +434,10 @@ class CppAnalytics(CodeAnalytics):
 		return '#include '
 
 	def get_function_name(self):
-		return self.arg['class'] + '::' + self.arg['function']
+		if self.arg['class']:
+			return self.arg['class'] + '::' + self.arg['function']
+		else:
+			return self.arg['function']
 
 class JavaAnalytics(CodeAnalytics):
 	"""docstring for JavaAnalytics"""
@@ -459,7 +462,7 @@ class ModSource(object):
 	def apply_modify(self):
 		fileType = os.path.splitext(self.arg['file'])[-1]
 		mod = None
-		if '.cpp' == fileType:
+		if '.cpp' == fileType or '.h' == fileType:
 			mod = CppAnalytics(self.arg)
 		elif '.java' == fileType:
 			mod = JavaAnalytics(self.arg)
@@ -493,8 +496,8 @@ if __name__ == '__main__':
 	'position': 'after',
 	'target': 'super.onStart();',
 	'content': 'sdkbox.init();',
-	'content_a':'@Override\rprotected void onStart() {\rsuper.onStart();\rSDKBox.onStart();\r}',
-	'header': 'import android.content.Intent;\rimport com.sdkbox.plugin.SDKBox;'
+	'content_a':'@Override\nprotected void onStart() {\nsuper.onStart();\nSDKBox.onStart();\n}',
+	'header': 'import android.content.Intent;\nimport com.sdkbox.plugin.SDKBox;'
 	}
 
 	
